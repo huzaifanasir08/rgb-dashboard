@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const RGBLogDashboard = () => {
   const [logs, setLogs] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://arslanars.pythonanywhere.com/rgb-logs/')
+    fetch('https://fightschool-scrapper.datafunction.ca/rgb-logs')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched logs:', data);
-        setLogs(data);
+        setLogs(data.logs || []); // Access the logs array from response
       })
       .catch((error) => console.error('Error fetching RGB logs:', error));
   }, []);
@@ -28,18 +30,32 @@ const RGBLogDashboard = () => {
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
       width: '90%',
       maxWidth: '900px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '20px',
     },
     header: {
       fontSize: '32px',
       fontWeight: '700',
-      marginBottom: '24px',
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
-        color: '#0b7e57',
+      color: '#0b7e57',
     },
     emoji: {
       fontSize: '28px',
+    },
+    button: {
+      padding: '10px 20px',
+      backgroundColor: '#0b7e57',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '6px',
+      fontSize: '16px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      alignSelf: 'flex-start',
+      transition: 'background-color 0.3s ease',
     },
     table: {
       width: '100%',
@@ -56,7 +72,7 @@ const RGBLogDashboard = () => {
       padding: '12px',
       border: '1px solid #ddd',
       textAlign: 'center',
-        color: '#555',
+      color: '#555',
     },
     swatch: {
       width: '40px',
@@ -74,14 +90,21 @@ const RGBLogDashboard = () => {
           <span style={styles.emoji}>🎨</span> RGB Log Dashboard
         </h2>
 
+        <button onClick={() => navigate('/')} style={styles.button}>
+          Go to Input Form
+        </button>
+
         <table style={styles.table}>
           <thead>
             <tr>
               <th style={styles.th}>ID</th>
+              <th style={styles.th}>Predicted</th>
               <th style={styles.th}>Red</th>
               <th style={styles.th}>Green</th>
               <th style={styles.th}>Blue</th>
               <th style={styles.th}>Swatch</th>
+              <th style={styles.th}>Difference</th>
+              <th style={styles.th}>Validated</th>
               <th style={styles.th}>Timestamp</th>
             </tr>
           </thead>
@@ -89,6 +112,7 @@ const RGBLogDashboard = () => {
             {logs.map((log) => (
               <tr key={log.id}>
                 <td style={styles.td}>{log.id}</td>
+                <td style={styles.td}>{log.predicted.join(', ')}</td>
                 <td style={styles.td}>{log.red}</td>
                 <td style={styles.td}>{log.green}</td>
                 <td style={styles.td}>{log.blue}</td>
@@ -100,6 +124,8 @@ const RGBLogDashboard = () => {
                     }}
                   />
                 </td>
+                <td style={styles.td}>{log.difference.join(', ')}</td>
+                <td style={styles.td}>{log.is_validated ? '✅' : '❌'}</td>
                 <td style={styles.td}>
                   {new Date(log.timestamp).toLocaleString()}
                 </td>
