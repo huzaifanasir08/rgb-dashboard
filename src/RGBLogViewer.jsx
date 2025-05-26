@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RGBLogDashboard = () => {
   const [logs, setLogs] = useState([]);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
+    const toastId = toast.loading("Loading logs...");
     fetch('https://fightschool-scrapper.datafunction.ca/rgb-logs')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched logs:', data);
+        toast.update(toastId, {
+          render: "Loading successful!",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
         setLogs(data.logs || []); // Access the logs array from response
       })
       .catch((error) => console.error('Error fetching RGB logs:', error));
@@ -84,6 +94,8 @@ const RGBLogDashboard = () => {
   };
 
   return (
+    <>
+    <ToastContainer />
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.header}>
@@ -135,6 +147,8 @@ const RGBLogDashboard = () => {
         </table>
       </div>
     </div>
+    </>
+    
   );
 };
 

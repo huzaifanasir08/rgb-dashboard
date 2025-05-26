@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function InputForm() {
+    
     const [selectedFile, setSelectedFile] = useState(null);
     const [sampleType, setSampleType] = useState('input');
     const [validationValue, setValidationValue] = useState(0);
@@ -54,6 +57,7 @@ function InputForm() {
         formData.append('id', sampleType === 'validation' ? validationValue : 0);
 
         try {
+            const toastId = toast.loading("Processing...");
             const response = await fetch('https://fightschool-scrapper.datafunction.ca/getprediction/', {
                 method: 'POST',
                 body: formData,
@@ -65,18 +69,38 @@ function InputForm() {
                 setStatusMessage('✅ Sample uploaded successfully!');
                 setIsError(false);
                 resetForm(); // Clear form on success
+                    toast.update(toastId, {
+                    render: "Processing Completed",
+                    type: "success",
+                    isLoading: false,
+                    autoClose: 2000,
+                });
             } else {
                 setStatusMessage('❌ Upload failed. Please try again.');
                 setIsError(true);
+                toast.update(toastId, {
+                    render: "Something went wrong.",
+                    type: "error",
+                    isLoading: false,
+                    autoClose: 3000,
+                });
             }
         } catch (error) {
             console.error('Upload error:', error);
             setStatusMessage('❌ An error occurred. Check your connection.');
             setIsError(true);
+            toast.update(toastId, {
+                render: `Something went wrong. ${error}`,
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+            });
         }
     };
 
     return (
+        <>
+        <ToastContainer />
         <div style={styles.container}>
             <h2 style={styles.title}>🎨 AttarProjects - Color Prediction</h2>
             <form onSubmit={handleSubmit} style={styles.form}>
@@ -142,6 +166,7 @@ function InputForm() {
             </form>
             <footer style={styles.footer}>© 2025 AttarProjects. All rights reserved.</footer>
         </div>
+        </>
     );
 }
 
