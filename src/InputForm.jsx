@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logo from '../src/assets/logo.png'; // Assuming logo.png is in the same directory
 
 function InputForm() {
     
@@ -102,7 +103,8 @@ function InputForm() {
         <>
         <ToastContainer />
         <div style={styles.container}>
-            <h2 style={styles.title}>🎨 AttarProjects - Color Prediction</h2>
+            <img src={logo} alt="Logo" style={{height:'10em', marginBottom:'-50px'}} />
+            <h2 style={styles.title}>Smart LeatherDyeBot</h2>
             <form onSubmit={handleSubmit} style={styles.form}>
                 <div style={styles.inputGroup}>
                     <label style={styles.label}>Upload Photo</label>
@@ -154,9 +156,10 @@ function InputForm() {
                         />
                     </div>
                 )}
-
-                <button type="submit" style={styles.button}>🚀 Submit Sample</button>
-                <button onClick={() => navigate('/rgblog')} style={styles.button}>Go to Dashboard</button>
+                <div className="buttons">
+                <button type="submit" style={styles.button}>Submit Sample</button>
+                <button onClick={() => navigate('/system-logs')} style={styles.button}>Go to Dashboard</button>
+                </div>
 
                 {statusMessage && (
                     <p style={{ ...styles.status, color: isError ? '#ef4444' : '#10b981' }}>
@@ -172,7 +175,7 @@ function InputForm() {
 
 const styles = {
     container: {
-        maxWidth: '440px',
+        width: '440px',
         margin: '50px auto',
         padding: '32px 24px',
         backgroundColor: '#ffffff',
@@ -232,15 +235,17 @@ const styles = {
         marginLeft: '6px'
     },
     button: {
-        padding: '12px 24px',
-        fontSize: '16px',
+        padding: '1rem',
+        fontSize: '.9rem',
         backgroundColor: '#2563eb',
         color: '#fff',
         border: 'none',
         borderRadius: '8px',
         cursor: 'pointer',
         fontWeight: '600',
-        transition: 'background 0.3s'
+        transition: 'background 0.3s',
+        width: '40%',
+        margin: '0 10px',
     },
     status: {
         marginTop: '12px',

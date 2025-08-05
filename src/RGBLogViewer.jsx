@@ -99,7 +99,7 @@ const RGBLogDashboard = () => {
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.header}>
-          <span style={styles.emoji}>🎨</span> RGB Log Dashboard
+          <span style={styles.emoji}>🎨</span> Prediction Logs Dashboard
         </h2>
 
         <button onClick={() => navigate('/')} style={styles.button}>
