@@ -10,7 +10,7 @@ const RGBLogDashboard = () => {
 
   useEffect(() => {
     const toastId = toast.loading("Loading logs...");
-    fetch('https://fightschool-scrapper.datafunction.ca/rgb-logs')
+    fetch('http://145.223.116.224:8000/rgb-logs')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched logs:', data);
@@ -27,7 +27,7 @@ const RGBLogDashboard = () => {
 
   const styles = {
     container: {
-      backgroundColor: '#f5f6f7',
+      backgroundColor: '#11193a',
       minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
@@ -50,14 +50,14 @@ const RGBLogDashboard = () => {
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
-      color: '#0b7e57',
+      color: '#11193a',
     },
     emoji: {
       fontSize: '28px',
     },
     button: {
       padding: '10px 20px',
-      backgroundColor: '#0b7e57',
+      backgroundColor: '#021668ff',
       color: '#fff',
       border: 'none',
       borderRadius: '6px',
@@ -99,7 +99,7 @@ const RGBLogDashboard = () => {
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.header}>
-          <span style={styles.emoji}>🎨</span> Prediction Logs Dashboard
+          Prediction Logs Dashboard
         </h2>
 
         <button onClick={() => navigate('/')} style={styles.button}>

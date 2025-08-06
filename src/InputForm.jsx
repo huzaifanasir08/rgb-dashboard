@@ -66,10 +66,11 @@ function InputForm() {
         formData.append('file', selectedFile);
         formData.append('type', sampleType);
         formData.append('id', sampleType === 'validation' ? validationValue : 0);
+        console.log(validationValue);
 
         try {
             const toastId = toast.loading("Processing...");
-            const response = await fetch('https://fightschool-scrapper.datafunction.ca/getprediction/', {
+            const response = await fetch('http://145.223.116.224:8000/getprediction/', {
                 method: 'POST',
                 body: formData,
             });
@@ -162,7 +163,7 @@ function InputForm() {
 
                     <div style={styles.buttons}>
                         <button type="submit" style={styles.button}>Submit Sample</button>
-                        <button type="button" onClick={() => navigate('/system-logs')} style={styles.button}>Go to Dashboard</button>
+                        <button type="button" onClick={() => navigate('/prediction-logs')} style={styles.button}>Go to Dashboard</button>
                     </div>
 
                     {statusMessage && (

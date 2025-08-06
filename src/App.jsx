@@ -8,7 +8,7 @@ function App() {
     <>
     <Routes>
             <Route path="/" element={<InputForm />} />
-            <Route path="/system-logs" element={<RGBLogViewer />} />
+            <Route path="/prediction-logs" element={<RGBLogViewer />} />
           </Routes>
       
     </>
