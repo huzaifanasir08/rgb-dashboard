@@ -10,7 +10,7 @@ const RGBLogDashboard = () => {
 
   useEffect(() => {
     const toastId = toast.loading("Loading logs...");
-    fetch('http://145.223.116.224:8000/rgb-logs')
+    fetch('https://api.smartlatherbot.bytecraftre.com/rgb-logs')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched logs:', data);
