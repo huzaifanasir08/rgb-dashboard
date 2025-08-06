@@ -70,7 +70,7 @@ function InputForm() {
 
         try {
             const toastId = toast.loading("Processing...");
-            const response = await fetch('http://145.223.116.224:8000/getprediction/', {
+            const response = await fetch('/api/getprediction/', {
                 method: 'POST',
                 body: formData,
             });
