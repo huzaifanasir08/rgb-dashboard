@@ -10,7 +10,7 @@ const RGBLogDashboard = () => {
 
   useEffect(() => {
     const toastId = toast.loading("Loading logs...");
-    fetch('/api/rgb-logs')
+    fetch('/rgb-logs')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched logs:', data);
