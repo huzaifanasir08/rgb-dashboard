@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logo from '../src/assets/logo.png'; // Adjust path as needed
+const token = localStorage.getItem("token");
 
 function InputForm() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -66,18 +67,22 @@ function InputForm() {
         formData.append('file', selectedFile);
         formData.append('type', sampleType);
         formData.append('id', sampleType === 'validation' ? validationValue : 0);
-        console.log(validationValue);
+        // console.log(validationValue);
 
         try {
             const toastId = toast.loading("Processing...");
             const response = await fetch('https://api.smartlatherbot.bytecraftre.com/getprediction/', {
+                // const response = await fetch('https://api.smartlatherbot.bytecraftre.com/getprediction/', {
                 method: 'POST',
+                headers: {
+                    Authorization: token,
+                },
                 body: formData,
             });
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Response data:', data);
+                // console.log('Response data:', data);
                 setStatusMessage('✅ Sample uploaded successfully!');
                 setIsError(false);
                 resetForm();
@@ -88,11 +93,18 @@ function InputForm() {
                     autoClose: 2000,
                 });
             } else {
+                toast.update(toastId, {
+                    render: `Something went wrong.`,
+                    type: "error",
+                    isLoading: false,
+                    autoClose: 3000,
+                });
                 throw new Error('Upload failed');
+
             }
         } catch (error) {
-            console.error('Upload error:', error);
-            setStatusMessage('❌ An error occurred. Check your connection.');
+            // console.error('Upload error:', error);
+            setStatusMessage('❌ An error occurred. Please try again.');
             setIsError(true);
             toast.update(toastId, {
                 render: `Something went wrong. ${error}`,
@@ -166,6 +178,30 @@ function InputForm() {
                         <button type="button" onClick={() => navigate('/prediction-logs')} style={styles.button}>Go to Dashboard</button>
                     </div>
 
+                    <div style={styles.btm_buttons}>
+                        <button
+                            type="button"
+                            style={styles.button}
+                            onClick={() => {
+                                window.open("https://api.smartlatherbot.bytecraftre.com/admin/password_change/", "_blank");
+                            }}
+                        >
+                            Change Password
+                        </button>
+                        <button
+                            type="button"
+                            style={styles.logout_button}
+                            onClick={() => {
+                                localStorage.removeItem("token"); // remove token
+                                navigate("/login"); // redirect to login
+                            }}
+                        >
+                            Logout
+                        </button>
+
+                    </div>
+
+
                     {statusMessage && (
                         <p style={{ ...styles.status, color: isError ? '#ef4444' : '#10b981' }}>
                             {statusMessage}
@@ -185,6 +221,14 @@ function getResponsiveStyles(isMobile) {
             display: 'flex',
             justifyContent: isMobile ? 'center' : 'space-between',
             marginTop: '20px',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            gap: '10px'
+        },
+        btm_buttons: {
+            display: 'flex',
+            justifyContent: isMobile ? 'center' : 'space-between',
+            marginTop: '10px',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center',
             gap: '10px'
@@ -254,6 +298,30 @@ function getResponsiveStyles(isMobile) {
             padding: '1rem 0.5rem',
             fontSize: '.9rem',
             backgroundColor: '#2563eb',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            transition: 'background 0.3s',
+            width: isMobile ? '100%' : '60%',
+        },
+        logout_button: {
+            padding: '1rem 0.5rem',
+            fontSize: '.9rem',
+            backgroundColor: '#ab0000ff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            transition: 'background 0.3s',
+            width: isMobile ? '100%' : '60%',
+        },
+        change_button: {
+            padding: '1rem 0.5rem',
+            fontSize: '.9rem',
+            backgroundColor: '#0009aeff',
             color: '#fff',
             border: 'none',
             borderRadius: '8px',

@@ -2,36 +2,66 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+const token = localStorage.getItem("token");
 
 const RGBLogDashboard = () => {
   const [logs, setLogs] = useState([]);
   const navigate = useNavigate();
-  
+
 
   useEffect(() => {
-    const toastId = toast.loading("Loading logs...");
-    fetch('https://api.smartlatherbot.bytecraftre.com/rgb-logs')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Fetched logs:', data);
+    const fetchLogs = async () => {
+      const toastId = toast.loading("Loading logs...");
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch("https://api.smartlatherbot.bytecraftre.com/rgb-logs", {
+        // const response = await fetch("https://api.smartlatherbot.bytecraftre.com/rgb-logs", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? token : "", // attach JWT if present
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // console.log("Fetched logs:", data);
+
         toast.update(toastId, {
           render: "Loading successful!",
           type: "success",
           isLoading: false,
           autoClose: 2000,
         });
-        setLogs(data.logs || []); // Access the logs array from response
-      })
-      .catch((error) => console.error('Error fetching RGB logs:', error));
+
+        setLogs(data.logs || []);
+      } catch (error) {
+        console.error("Error fetching RGB logs:", error);
+        toast.update(toastId, {
+          render: "Failed to load logs",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
+    };
+
+    fetchLogs();
   }, []);
+
 
   const styles = {
     container: {
-      backgroundColor: '#11193a',
+      backgroundColor: '#f5f6f7',
       minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: logs.length<1 ? 'px':'100px',
     },
     card: {
       backgroundColor: '#fff',
@@ -95,60 +125,60 @@ const RGBLogDashboard = () => {
 
   return (
     <>
-    <ToastContainer />
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.header}>
-          Prediction Logs Dashboard
-        </h2>
+      <ToastContainer />
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <h2 style={styles.header}>
+            Prediction Logs Dashboard
+          </h2>
 
-        <button onClick={() => navigate('/')} style={styles.button}>
-          Go to Input Form
-        </button>
+          <button onClick={() => navigate('/')} style={styles.button}>
+            Go to Input Form
+          </button>
 
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th style={styles.th}>ID</th>
-              <th style={styles.th}>Predicted</th>
-              <th style={styles.th}>Red</th>
-              <th style={styles.th}>Green</th>
-              <th style={styles.th}>Blue</th>
-              <th style={styles.th}>Swatch</th>
-              <th style={styles.th}>Difference</th>
-              <th style={styles.th}>Validated</th>
-              <th style={styles.th}>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td style={styles.td}>{log.id}</td>
-                <td style={styles.td}>{log.predicted.join(', ')}</td>
-                <td style={styles.td}>{log.red}</td>
-                <td style={styles.td}>{log.green}</td>
-                <td style={styles.td}>{log.blue}</td>
-                <td style={styles.td}>
-                  <div
-                    style={{
-                      ...styles.swatch,
-                      backgroundColor: `rgb(${log.red}, ${log.green}, ${log.blue})`,
-                    }}
-                  />
-                </td>
-                <td style={styles.td}>{log.difference.join(', ')}</td>
-                <td style={styles.td}>{log.is_validated ? '✅' : '❌'}</td>
-                <td style={styles.td}>
-                  {new Date(log.timestamp).toLocaleString()}
-                </td>
+          <table style={styles.table}>
+            <thead>
+              <tr>
+                <th style={styles.th}>ID</th>
+                <th style={styles.th}>Predicted</th>
+                <th style={styles.th}>Red</th>
+                <th style={styles.th}>Green</th>
+                <th style={styles.th}>Blue</th>
+                <th style={styles.th}>Swatch</th>
+                <th style={styles.th}>Difference</th>
+                <th style={styles.th}>Validated</th>
+                <th style={styles.th}>Timestamp</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {logs.map((log) => (
+                <tr key={log.id}>
+                  <td style={styles.td}>{log.id}</td>
+                  <td style={styles.td}>{log.predicted.join(', ')}</td>
+                  <td style={styles.td}>{log.red}</td>
+                  <td style={styles.td}>{log.green}</td>
+                  <td style={styles.td}>{log.blue}</td>
+                  <td style={styles.td}>
+                    <div
+                      style={{
+                        ...styles.swatch,
+                        backgroundColor: `rgb(${log.red}, ${log.green}, ${log.blue})`,
+                      }}
+                    />
+                  </td>
+                  <td style={styles.td}>{log.difference.join(', ')}</td>
+                  <td style={styles.td}>{log.is_validated ? '✅' : '❌'}</td>
+                  <td style={styles.td}>
+                    {new Date(log.timestamp).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     </>
-    
+
   );
 };
 
