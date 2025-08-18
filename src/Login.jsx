@@ -126,6 +126,8 @@ const styles = {
         fontSize: "15px",
         outline: "none",
         transition: "border 0.3s",
+        backgroundColor: "#ffffffff",
+        color: "#000000"
     },
     button: {
         padding: "12px",
