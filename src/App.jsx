@@ -17,7 +17,7 @@ function App() {
         if (data.dispensed) {
           toast.success("Color dispensed successfully!");
           // reset after showing
-          await fetch("https://api.smartlatherbot.bytecraftre.com/dispense/reset/", { method: "POST" });
+          await fetch("https://api.smartlatherbot.bytecraftre.com/api/dispense/reset/", { method: "POST" });
         }
       } catch (err) {
         console.error("Polling error:", err);
