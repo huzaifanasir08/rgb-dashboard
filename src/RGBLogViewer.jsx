@@ -68,7 +68,7 @@ const RGBLogDashboard = () => {
       padding: '30px',
       borderRadius: '12px',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-      width: '90%',
+      width: '100%',
       maxWidth: '900px',
       display: 'flex',
       flexDirection: 'column',
