@@ -28,7 +28,7 @@ function LoginForm() {
             if (response.ok) {
                 localStorage.setItem("token", data.token);
                 toast.update(toastId, {
-                    render: "✅ Login successful!",
+                    render: "Login successful!",
                     type: "success",
                     isLoading: false,
                     autoClose: 2000,
@@ -36,7 +36,7 @@ function LoginForm() {
                 setTimeout(() => window.location.href = "/", 1500);
             } else {
                 toast.update(toastId, {
-                    render: data.message || "❌ Invalid credentials",
+                    render: data.message || "Invalid credentials",
                     type: "error",
                     isLoading: false,
                     autoClose: 3000,
